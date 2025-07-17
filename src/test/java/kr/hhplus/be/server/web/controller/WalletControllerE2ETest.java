@@ -128,16 +128,16 @@ public class WalletControllerE2ETest {
 
         assertEquals(HttpStatus.OK, response1.getStatusCode());
         assertNotNull(response1.getBody());
-        assertEquals("금액 충전을 완료했습니다.", response1.getBody().getMessage());
-        assertEquals("ok", response1.getBody().getCode());
+        assertEquals(WalletMessages.CHARGE_SUCCESS, response1.getBody().getMessage());
+        assertEquals(Messages.CODE_OK, response1.getBody().getCode());
         ObjectMapper mapper = new ObjectMapper();
         ChargeBalanceReply data1 = mapper.convertValue(response1.getBody().getData(), ChargeBalanceReply.class);
         assertTrue(data1.isCharged());
 
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         assertNotNull(response2.getBody());
-        assertEquals("금액 충전을 완료했습니다.", response2.getBody().getMessage());
-        assertEquals("ok", response2.getBody().getCode());
+        assertEquals(WalletMessages.CHARGE_SUCCESS, response2.getBody().getMessage());
+        assertEquals(Messages.CODE_OK, response2.getBody().getCode());
         ChargeBalanceReply data2 = mapper.convertValue(response2.getBody().getData(), ChargeBalanceReply.class);
         assertTrue(data2.isCharged());
     }
