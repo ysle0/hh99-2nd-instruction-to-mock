@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/v1/products")
+@RequestMapping("/api/v1/products")
 @ResponseStatus(HttpStatus.OK)
 @Tag(name = "product", description = "상품 API")
 public class ProductController {
