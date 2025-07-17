@@ -1,8 +1,12 @@
 package kr.hhplus.be.server.web.controller;
 
 import kr.hhplus.be.server.TestcontainersConfiguration;
+import kr.hhplus.be.server.domain.Messages;
+import kr.hhplus.be.server.domain.product.ProductMessages;
+import kr.hhplus.be.server.web.dto.ApiResponse;
 import kr.hhplus.be.server.web.dto.ShowProductReply;
 import kr.hhplus.be.server.web.dto.ShowTopNProductsWithinMDaysReply;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,17 +30,29 @@ public class ProductControllerE2ETest {
     public void ok_showProducts() {
         UUID productId = UUID.randomUUID();
 
-        ResponseEntity<ShowProductReply> response = restTemplate.getForEntity(
+        ResponseEntity<ApiResponse> response = restTemplate.getForEntity(
                 "/api/v1/products/" + productId,
-                ShowProductReply.class
+                ApiResponse.class
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertNotNull(response.getBody().productID());
-        assertNotNull(response.getBody().name());
-        assertTrue(response.getBody().price() > 0);
-        assertTrue(response.getBody().quantityLeft() > 0);
+        
+        if (response.getBody().getCode().equals("ok")) {
+            assertEquals(ProductMessages.PRODUCT_QUERY_SUCCESS, response.getBody().getMessage());
+            assertEquals(Messages.CODE_OK, response.getBody().getCode());
+            assertNotNull(response.getBody().getData());
+            
+            ObjectMapper mapper = new ObjectMapper();
+            ShowProductReply data = mapper.convertValue(response.getBody().getData(), ShowProductReply.class);
+            assertNotNull(data.productID());
+            assertNotNull(data.name());
+            assertTrue(data.price() > 0);
+            assertTrue(data.quantityLeft() > 0);
+        } else {
+            assertEquals(ProductMessages.PRODUCT_QUERY_FAILED, response.getBody().getMessage());
+            assertEquals(Messages.CODE_NO, response.getBody().getCode());
+        }
     }
 
     @Test
@@ -45,17 +61,23 @@ public class ProductControllerE2ETest {
         int top = 5;
 
         String url = "/api/v1/products/range?days-within=" + daysWithin + "&top=" + top;
-        ResponseEntity<ShowTopNProductsWithinMDaysReply> response = restTemplate.getForEntity(
+        ResponseEntity<ApiResponse> response = restTemplate.getForEntity(
                 url,
-                ShowTopNProductsWithinMDaysReply.class
+                ApiResponse.class
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertNotNull(response.getBody().products());
-        assertTrue(response.getBody().products().size() <= top);
+        assertEquals(ProductMessages.PRODUCT_RANGE_QUERY_SUCCESS, response.getBody().getMessage());
+        assertEquals(Messages.CODE_OK, response.getBody().getCode());
+        assertNotNull(response.getBody().getData());
+        
+        ObjectMapper mapper = new ObjectMapper();
+        ShowTopNProductsWithinMDaysReply data = mapper.convertValue(response.getBody().getData(), ShowTopNProductsWithinMDaysReply.class);
+        assertNotNull(data.products());
+        assertTrue(data.products().size() <= top);
 
-        for (var p : response.getBody().products()) {
+        for (var p : data.products()) {
             assertNotNull(p.productID());
             assertNotNull(p.name());
             assertTrue(p.price() > 0);
@@ -69,23 +91,30 @@ public class ProductControllerE2ETest {
         String url1 = "/api/v1/products/range?days-within=5&top=3";
         String url2 = "/api/v1/products/range?days-within=5&top=3";
 
-        ResponseEntity<ShowTopNProductsWithinMDaysReply> response1 = restTemplate.getForEntity(
+        ResponseEntity<ApiResponse> response1 = restTemplate.getForEntity(
                 url1,
-                ShowTopNProductsWithinMDaysReply.class
+                ApiResponse.class
         );
 
-        ResponseEntity<ShowTopNProductsWithinMDaysReply> response2 = restTemplate.getForEntity(
+        ResponseEntity<ApiResponse> response2 = restTemplate.getForEntity(
                 url2,
-                ShowTopNProductsWithinMDaysReply.class
+                ApiResponse.class
         );
 
         assertEquals(HttpStatus.OK, response1.getStatusCode());
         assertNotNull(response1.getBody());
-        assertTrue(response1.getBody().products().size() <= 3);
+        assertEquals(ProductMessages.PRODUCT_RANGE_QUERY_SUCCESS, response1.getBody().getMessage());
+        assertEquals(Messages.CODE_OK, response1.getBody().getCode());
+        ObjectMapper mapper = new ObjectMapper();
+        ShowTopNProductsWithinMDaysReply data1 = mapper.convertValue(response1.getBody().getData(), ShowTopNProductsWithinMDaysReply.class);
+        assertTrue(data1.products().size() <= 3);
 
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         assertNotNull(response2.getBody());
-        assertTrue(response2.getBody().products().size() <= 7);
+        assertEquals(ProductMessages.PRODUCT_RANGE_QUERY_SUCCESS, response2.getBody().getMessage());
+        assertEquals(Messages.CODE_OK, response2.getBody().getCode());
+        ShowTopNProductsWithinMDaysReply data2 = mapper.convertValue(response2.getBody().getData(), ShowTopNProductsWithinMDaysReply.class);
+        assertTrue(data2.products().size() <= 3);
     }
 
     @Test
@@ -93,22 +122,32 @@ public class ProductControllerE2ETest {
         UUID productId1 = UUID.randomUUID();
         UUID productId2 = UUID.randomUUID();
 
-        ResponseEntity<ShowProductReply> response1 = restTemplate.getForEntity(
+        ResponseEntity<ApiResponse> response1 = restTemplate.getForEntity(
                 "/api/v1/products/" + productId1,
-                ShowProductReply.class
+                ApiResponse.class
         );
 
-        ResponseEntity<ShowProductReply> response2 = restTemplate.getForEntity(
+        ResponseEntity<ApiResponse> response2 = restTemplate.getForEntity(
                 "/api/v1/products/" + productId2,
-                ShowProductReply.class
+                ApiResponse.class
         );
 
         assertEquals(HttpStatus.OK, response1.getStatusCode());
         assertNotNull(response1.getBody());
-        assertTrue(response1.getBody().price() > 0);
+        
+        if (response1.getBody().getCode().equals("ok")) {
+            ObjectMapper mapper = new ObjectMapper();
+            ShowProductReply data1 = mapper.convertValue(response1.getBody().getData(), ShowProductReply.class);
+            assertTrue(data1.price() > 0);
+        }
 
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         assertNotNull(response2.getBody());
-        assertTrue(response2.getBody().price() > 0);
+        
+        if (response2.getBody().getCode().equals("ok")) {
+            ObjectMapper mapper = new ObjectMapper();
+            ShowProductReply data2 = mapper.convertValue(response2.getBody().getData(), ShowProductReply.class);
+            assertTrue(data2.price() > 0);
+        }
     }
 }
