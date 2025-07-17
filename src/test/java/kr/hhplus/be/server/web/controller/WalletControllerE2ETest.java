@@ -1,10 +1,10 @@
 package kr.hhplus.be.server.web.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.TestcontainersConfiguration;
-import kr.hhplus.be.server.web.dto.ChargeBalanceReply;
-import kr.hhplus.be.server.web.dto.ChargeBalanceRequest;
-import kr.hhplus.be.server.web.dto.ShowBalanceReply;
-import kr.hhplus.be.server.web.dto.ShowBalanceRequest;
+import kr.hhplus.be.server.domain.Messages;
+import kr.hhplus.be.server.domain.wallet.WalletMessages;
+import kr.hhplus.be.server.web.dto.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,45 +28,63 @@ public class WalletControllerE2ETest {
     public void ok_chargeBalance() {
         var request = new ChargeBalanceRequest(UUID.randomUUID(), 10000);
 
-        ResponseEntity<ChargeBalanceReply> response = restTemplate.postForEntity(
+        ResponseEntity<ApiResponse> response = restTemplate.postForEntity(
                 "/api/v1/wallets/balance/charge",
                 request,
-                ChargeBalanceReply.class
+                ApiResponse.class
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().isCharged());
+        assertEquals(WalletMessages.CHARGE_SUCCESS, response.getBody().getMessage());
+        assertEquals(Messages.CODE_OK, response.getBody().getCode());
+        assertNotNull(response.getBody().getData());
+
+        ObjectMapper mapper = new ObjectMapper();
+        ChargeBalanceReply data = mapper.convertValue(response.getBody().getData(), ChargeBalanceReply.class);
+        assertTrue(data.isCharged());
     }
 
     @Test
     public void fail_chargeBalance_withZeroAmount() {
         ChargeBalanceRequest request = new ChargeBalanceRequest(UUID.randomUUID(), 0);
 
-        ResponseEntity<ChargeBalanceReply> response = restTemplate.postForEntity(
+        ResponseEntity<ApiResponse> response = restTemplate.postForEntity(
                 "/api/v1/wallets/balance/charge",
                 request,
-                ChargeBalanceReply.class
+                ApiResponse.class
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertFalse(response.getBody().isCharged());
+        assertEquals(WalletMessages.CHARGE_INVALID_AMOUNT, response.getBody().getMessage());
+        assertEquals(Messages.CODE_NO, response.getBody().getCode());
+        assertNotNull(response.getBody().getData());
+
+        ObjectMapper mapper = new ObjectMapper();
+        ChargeBalanceReply data = mapper.convertValue(response.getBody().getData(), ChargeBalanceReply.class);
+        assertFalse(data.isCharged());
     }
 
     @Test
     public void fail_chargeBalance_withNegativeAmount() {
         ChargeBalanceRequest request = new ChargeBalanceRequest(UUID.randomUUID(), -5000);
 
-        ResponseEntity<ChargeBalanceReply> response = restTemplate.postForEntity(
+        ResponseEntity<ApiResponse> response = restTemplate.postForEntity(
                 "/api/v1/wallets/balance/charge",
                 request,
-                ChargeBalanceReply.class
+                ApiResponse.class
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertFalse(response.getBody().isCharged());
+        assertEquals(WalletMessages.CHARGE_INVALID_AMOUNT, response.getBody().getMessage());
+        assertEquals(Messages.CODE_NO, response.getBody().getCode());
+        assertNotNull(response.getBody().getData());
+
+        ObjectMapper mapper = new ObjectMapper();
+        ChargeBalanceReply data = mapper.convertValue(response.getBody().getData(), ChargeBalanceReply.class);
+        assertFalse(data.isCharged());
     }
 
 
@@ -74,15 +92,21 @@ public class WalletControllerE2ETest {
     public void ok_showBalance_success() {
         ShowBalanceRequest request = new ShowBalanceRequest(UUID.randomUUID());
 
-        ResponseEntity<ShowBalanceReply> response = restTemplate.postForEntity(
+        ResponseEntity<ApiResponse> response = restTemplate.postForEntity(
                 "/api/v1/wallets/balance",
                 request,
-                ShowBalanceReply.class
+                ApiResponse.class
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().balance() >= 0);
+        assertEquals(WalletMessages.BALANCE_QUERY_SUCCESS, response.getBody().getMessage());
+        assertEquals(Messages.CODE_OK, response.getBody().getCode());
+        assertNotNull(response.getBody().getData());
+
+        ObjectMapper mapper = new ObjectMapper();
+        ShowBalanceReply data = mapper.convertValue(response.getBody().getData(), ShowBalanceReply.class);
+        assertTrue(data.balance() >= 0);
     }
 
     @Test
@@ -90,25 +114,32 @@ public class WalletControllerE2ETest {
         ChargeBalanceRequest request1 = new ChargeBalanceRequest(UUID.randomUUID(), 5000);
         ChargeBalanceRequest request2 = new ChargeBalanceRequest(UUID.randomUUID(), 3000);
 
-        ResponseEntity<ChargeBalanceReply> response1 = restTemplate.postForEntity(
+        ResponseEntity<ApiResponse> response1 = restTemplate.postForEntity(
                 "/api/v1/wallets/balance/charge",
                 request1,
-                ChargeBalanceReply.class
+                ApiResponse.class
         );
 
-        ResponseEntity<ChargeBalanceReply> response2 = restTemplate.postForEntity(
+        ResponseEntity<ApiResponse> response2 = restTemplate.postForEntity(
                 "/api/v1/wallets/balance/charge",
                 request2,
-                ChargeBalanceReply.class
+                ApiResponse.class
         );
 
         assertEquals(HttpStatus.OK, response1.getStatusCode());
         assertNotNull(response1.getBody());
-        assertTrue(response1.getBody().isCharged());
+        assertEquals("금액 충전을 완료했습니다.", response1.getBody().getMessage());
+        assertEquals("ok", response1.getBody().getCode());
+        ObjectMapper mapper = new ObjectMapper();
+        ChargeBalanceReply data1 = mapper.convertValue(response1.getBody().getData(), ChargeBalanceReply.class);
+        assertTrue(data1.isCharged());
 
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         assertNotNull(response2.getBody());
-        assertTrue(response2.getBody().isCharged());
+        assertEquals("금액 충전을 완료했습니다.", response2.getBody().getMessage());
+        assertEquals("ok", response2.getBody().getCode());
+        ChargeBalanceReply data2 = mapper.convertValue(response2.getBody().getData(), ChargeBalanceReply.class);
+        assertTrue(data2.isCharged());
     }
 
 }
