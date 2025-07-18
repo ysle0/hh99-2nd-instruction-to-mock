@@ -58,7 +58,8 @@ erDiagram
 %%  ----- ----- top-sold 5 products within 3 days  ----- -----
     top_sold_5_products_within_3_days {
         int id PK "auto increment"
-        uuid product_id "집계 기준에 맞는 product_id"
+        uuid product_id UK "집계 기준에 맞는 product_id"
+    %% 통계 집계용 테이블로 애초에 고아테이블임.
     %%Event + Procedure 로 30분에 1번 통계 처리를 수행
     }
 %%  ----- ----- top-sold 5 products within 3 days  ----- -----
