@@ -2,7 +2,7 @@
 erDiagram
 %%  ----- ----- users ----- -----
     users ||--|| wallets: has
-    users ||--o{ orders: places
+    users ||..o{ orders: places
     users }o--o{ users_to_discount_coupons: owns
     users {
         uuid id PK
