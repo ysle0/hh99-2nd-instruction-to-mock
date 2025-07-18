@@ -66,9 +66,8 @@ erDiagram
 
 %%  ----- ----- orders <-> products ----- -----
     orders_to_products {
-        uuid id PK
-        uuid order_id FK
-        uuid product_id FK
+        uuid order_id PK, FK
+        uuid product_id PK, FK
         int ordered_quantity "주문한 상품의 총 갯수"
         int price_at_purchase "구매 시점의 상품 가격"
         datetime created_at
@@ -77,9 +76,8 @@ erDiagram
 
 %%  ----- ----- orders <-> discount_coupons ----- -----
     orders_to_discount_coupons {
-        uuid id PK
-        uuid order_id FK
-        uuid discount_coupon_id FK
+        uuid order_id PK, FK
+        uuid discount_coupon_id PK, FK
         int discount_value_at_purchase "구매 시점의 할인 수치, discount_unit_at_purchase 와 함께 사용"
         enum discount_coupon_type_at_purchase "('AMOUNT', 'PERCENT') 할인금액, 할인 퍼센티지. 구매 시점의 할인 쿠폰의 단위"
         bool is_used "할인 쿠폰 사용의 여부"
@@ -90,9 +88,8 @@ erDiagram
 
 %%  ----- ----- users <-> discount_coupons ----- -----
     users_to_discount_coupons {
-        uuid id PK
-        uuid user_id FK "unique"
-        uuid discount_coupon_id FK
+        uuid user_id PK, FK
+        uuid discount_coupon_id PK, FK
         int quantity "유저가 보유하고 있는 할인 쿠폰의 갯수"
         datetime created_at
         datetime updated_at
