@@ -12,8 +12,7 @@ erDiagram
 
 %%  ----- ----- wallets ----- -----
     wallets {
-        uuid id PK
-        uuid user_id FK
+        uuid user_id PK, FK
         int balance "현재 유저의 보유 잔액"
         datetime created_at
     }
