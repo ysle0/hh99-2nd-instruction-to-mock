@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.domain.Messages;
 import kr.hhplus.be.server.domain.order.OrderMessages;
 import kr.hhplus.be.server.web.dto.ApiResponse;
-import kr.hhplus.be.server.web.dto.OrderProductReply;
+import kr.hhplus.be.server.web.dto.OrderProductResponse;
 import kr.hhplus.be.server.web.dto.OrderProductRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +17,18 @@ public class OrderController {
     @PostMapping("/")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "상품 1종류를 1~N개 주문하기")
-    public ApiResponse<OrderProductReply> orderProduct(
+    public ApiResponse<OrderProductResponse> orderProduct(
             @RequestBody OrderProductRequest r) {
         if (r.quantity() <= 0) {
             return new ApiResponse<>(
                     OrderMessages.ORDER_INVALID_QUANTITY,
                     Messages.CODE_NO,
-                    new OrderProductReply(false));
+                    new OrderProductResponse(false));
         }
 
         return new ApiResponse<>(
                 OrderMessages.ORDER_SUCCESS,
                 Messages.CODE_OK,
-                new OrderProductReply(true));
+                new OrderProductResponse(true));
     }
 }

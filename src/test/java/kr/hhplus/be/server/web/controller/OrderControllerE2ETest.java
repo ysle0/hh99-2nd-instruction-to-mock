@@ -5,7 +5,7 @@ import kr.hhplus.be.server.TestcontainersConfiguration;
 import kr.hhplus.be.server.domain.Messages;
 import kr.hhplus.be.server.domain.order.OrderMessages;
 import kr.hhplus.be.server.web.dto.ApiResponse;
-import kr.hhplus.be.server.web.dto.OrderProductReply;
+import kr.hhplus.be.server.web.dto.OrderProductResponse;
 import kr.hhplus.be.server.web.dto.OrderProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class OrderControllerE2ETest {
         assertNotNull(response.getBody().getData());
 
         ObjectMapper mapper = new ObjectMapper();
-        OrderProductReply data = mapper.convertValue(response.getBody().getData(), OrderProductReply.class);
+        OrderProductResponse data = mapper.convertValue(response.getBody().getData(), OrderProductResponse.class);
         assertTrue(data.isOrdered());
     }
 
@@ -64,7 +64,7 @@ public class OrderControllerE2ETest {
         assertNotNull(response.getBody().getData());
 
         ObjectMapper mapper = new ObjectMapper();
-        OrderProductReply data = mapper.convertValue(response.getBody().getData(), OrderProductReply.class);
+        OrderProductResponse data = mapper.convertValue(response.getBody().getData(), OrderProductResponse.class);
         assertFalse(data.isOrdered());
     }
 
@@ -85,7 +85,7 @@ public class OrderControllerE2ETest {
         assertNotNull(response.getBody().getData());
 
         ObjectMapper mapper = new ObjectMapper();
-        OrderProductReply data = mapper.convertValue(response.getBody().getData(), OrderProductReply.class);
+        OrderProductResponse data = mapper.convertValue(response.getBody().getData(), OrderProductResponse.class);
         assertFalse(data.isOrdered());
     }
 
@@ -111,14 +111,14 @@ public class OrderControllerE2ETest {
         assertEquals(OrderMessages.ORDER_SUCCESS, response1.getBody().getMessage());
         assertEquals(Messages.CODE_OK, response1.getBody().getCode());
         ObjectMapper mapper = new ObjectMapper();
-        OrderProductReply data1 = mapper.convertValue(response1.getBody().getData(), OrderProductReply.class);
+        OrderProductResponse data1 = mapper.convertValue(response1.getBody().getData(), OrderProductResponse.class);
         assertTrue(data1.isOrdered());
 
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         assertNotNull(response2.getBody());
         assertEquals(OrderMessages.ORDER_SUCCESS, response2.getBody().getMessage());
         assertEquals(Messages.CODE_OK, response2.getBody().getCode());
-        OrderProductReply data2 = mapper.convertValue(response2.getBody().getData(), OrderProductReply.class);
+        OrderProductResponse data2 = mapper.convertValue(response2.getBody().getData(), OrderProductResponse.class);
         assertTrue(data2.isOrdered());
     }
 
@@ -144,14 +144,14 @@ public class OrderControllerE2ETest {
         assertEquals(OrderMessages.ORDER_SUCCESS, response1.getBody().getMessage());
         assertEquals(Messages.CODE_OK, response1.getBody().getCode());
         ObjectMapper mapper = new ObjectMapper();
-        OrderProductReply data1 = mapper.convertValue(response1.getBody().getData(), OrderProductReply.class);
+        OrderProductResponse data1 = mapper.convertValue(response1.getBody().getData(), OrderProductResponse.class);
         assertTrue(data1.isOrdered());
 
         assertNotNull(response2.getBody());
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         assertEquals(OrderMessages.ORDER_INVALID_QUANTITY, response2.getBody().getMessage());
         assertEquals(Messages.CODE_NO, response2.getBody().getCode());
-        OrderProductReply data2 = mapper.convertValue(response2.getBody().getData(), OrderProductReply.class);
+        OrderProductResponse data2 = mapper.convertValue(response2.getBody().getData(), OrderProductResponse.class);
         assertFalse(data2.isOrdered());
     }
 }

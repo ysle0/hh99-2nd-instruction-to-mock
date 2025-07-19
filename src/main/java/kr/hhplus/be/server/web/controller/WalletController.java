@@ -16,30 +16,30 @@ public class WalletController {
     @PostMapping("/balance/charge")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "유저의 지갑에 일정 금액을 충전하기", description = "충전금액은 0보다 커야함.")
-    public ApiResponse<ChargeBalanceReply> chargeBalance(
+    public ApiResponse<ChargeBalanceResponse> chargeBalance(
             @RequestBody ChargeBalanceRequest r) {
         if (r.newBalance() <= 0) {
             return new ApiResponse<>(
                     WalletMessages.CHARGE_INVALID_AMOUNT,
                     Messages.CODE_NO,
-                    new ChargeBalanceReply(false));
+                    new ChargeBalanceResponse(false));
         }
 
         return new ApiResponse<>(
                 WalletMessages.CHARGE_SUCCESS,
                 Messages.CODE_OK,
-                new ChargeBalanceReply(true));
+                new ChargeBalanceResponse(true));
     }
 
     @PostMapping("/balance")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "유저의 지갑에 있는 잔액을 조회하기")
-    public ApiResponse<ShowBalanceReply> showBalance(
+    public ApiResponse<ShowBalanceResponse> showBalance(
             @RequestBody ShowBalanceRequest r) {
         final int rndBalance = RandomUtil.Range(300_000, 0);
         return new ApiResponse<>(
                 WalletMessages.BALANCE_QUERY_SUCCESS,
                 Messages.CODE_OK,
-                new ShowBalanceReply(rndBalance));
+                new ShowBalanceResponse(rndBalance));
     }
 }

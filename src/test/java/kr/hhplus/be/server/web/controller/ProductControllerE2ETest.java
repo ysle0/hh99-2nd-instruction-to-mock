@@ -4,8 +4,8 @@ import kr.hhplus.be.server.TestcontainersConfiguration;
 import kr.hhplus.be.server.domain.Messages;
 import kr.hhplus.be.server.domain.product.ProductMessages;
 import kr.hhplus.be.server.web.dto.ApiResponse;
-import kr.hhplus.be.server.web.dto.ShowProductReply;
-import kr.hhplus.be.server.web.dto.ShowTopNProductsWithinMDaysReply;
+import kr.hhplus.be.server.web.dto.ShowProductResponse;
+import kr.hhplus.be.server.web.dto.ShowTopNProductsWithinMDaysResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class ProductControllerE2ETest {
             assertNotNull(response.getBody().getData());
             
             ObjectMapper mapper = new ObjectMapper();
-            ShowProductReply data = mapper.convertValue(response.getBody().getData(), ShowProductReply.class);
+            ShowProductResponse data = mapper.convertValue(response.getBody().getData(), ShowProductResponse.class);
             assertNotNull(data.productID());
             assertNotNull(data.name());
             assertTrue(data.price() > 0);
@@ -73,7 +73,7 @@ public class ProductControllerE2ETest {
         assertNotNull(response.getBody().getData());
         
         ObjectMapper mapper = new ObjectMapper();
-        ShowTopNProductsWithinMDaysReply data = mapper.convertValue(response.getBody().getData(), ShowTopNProductsWithinMDaysReply.class);
+        ShowTopNProductsWithinMDaysResponse data = mapper.convertValue(response.getBody().getData(), ShowTopNProductsWithinMDaysResponse.class);
         assertNotNull(data.products());
         assertTrue(data.products().size() <= top);
 
@@ -106,14 +106,14 @@ public class ProductControllerE2ETest {
         assertEquals(ProductMessages.PRODUCT_RANGE_QUERY_SUCCESS, response1.getBody().getMessage());
         assertEquals(Messages.CODE_OK, response1.getBody().getCode());
         ObjectMapper mapper = new ObjectMapper();
-        ShowTopNProductsWithinMDaysReply data1 = mapper.convertValue(response1.getBody().getData(), ShowTopNProductsWithinMDaysReply.class);
+        ShowTopNProductsWithinMDaysResponse data1 = mapper.convertValue(response1.getBody().getData(), ShowTopNProductsWithinMDaysResponse.class);
         assertTrue(data1.products().size() <= 3);
 
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         assertNotNull(response2.getBody());
         assertEquals(ProductMessages.PRODUCT_RANGE_QUERY_SUCCESS, response2.getBody().getMessage());
         assertEquals(Messages.CODE_OK, response2.getBody().getCode());
-        ShowTopNProductsWithinMDaysReply data2 = mapper.convertValue(response2.getBody().getData(), ShowTopNProductsWithinMDaysReply.class);
+        ShowTopNProductsWithinMDaysResponse data2 = mapper.convertValue(response2.getBody().getData(), ShowTopNProductsWithinMDaysResponse.class);
         assertTrue(data2.products().size() <= 3);
     }
 
@@ -137,7 +137,7 @@ public class ProductControllerE2ETest {
         
         if (response1.getBody().getCode().equals("ok")) {
             ObjectMapper mapper = new ObjectMapper();
-            ShowProductReply data1 = mapper.convertValue(response1.getBody().getData(), ShowProductReply.class);
+            ShowProductResponse data1 = mapper.convertValue(response1.getBody().getData(), ShowProductResponse.class);
             assertTrue(data1.price() > 0);
         }
 
@@ -146,7 +146,7 @@ public class ProductControllerE2ETest {
         
         if (response2.getBody().getCode().equals("ok")) {
             ObjectMapper mapper = new ObjectMapper();
-            ShowProductReply data2 = mapper.convertValue(response2.getBody().getData(), ShowProductReply.class);
+            ShowProductResponse data2 = mapper.convertValue(response2.getBody().getData(), ShowProductResponse.class);
             assertTrue(data2.price() > 0);
         }
     }

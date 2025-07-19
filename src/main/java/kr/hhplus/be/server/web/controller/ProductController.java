@@ -8,8 +8,8 @@ import kr.hhplus.be.server.util.ProductDummyGen;
 import kr.hhplus.be.server.util.RandomUtil;
 import kr.hhplus.be.server.web.dto.ApiResponse;
 import kr.hhplus.be.server.web.dto.DummyProduct;
-import kr.hhplus.be.server.web.dto.ShowProductReply;
-import kr.hhplus.be.server.web.dto.ShowTopNProductsWithinMDaysReply;
+import kr.hhplus.be.server.web.dto.ShowProductResponse;
+import kr.hhplus.be.server.web.dto.ShowTopNProductsWithinMDaysResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ public class ProductController {
     @GetMapping("/{productID}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "상품 1개를 조회하기", description = "product_id 는 UUID. uuid 예시: 6bf3c701-089f-4a6b-9563-94e6a317dbe8")
-    public ApiResponse<ShowProductReply> showProducts(
+    public ApiResponse<ShowProductResponse> showProducts(
             @PathVariable UUID productID
     ) {
         final boolean failedRandomly = Math.random() < 0.5;
@@ -32,7 +32,7 @@ public class ProductController {
             return new ApiResponse<>(
                     ProductMessages.PRODUCT_QUERY_FAILED,
                     Messages.CODE_NO,
-                    new ShowProductReply(
+                    new ShowProductResponse(
                             productID,
                             "",
                             0,
@@ -44,7 +44,7 @@ public class ProductController {
         return new ApiResponse<>(
                 ProductMessages.PRODUCT_QUERY_SUCCESS,
                 Messages.CODE_OK,
-                new ShowProductReply(
+                new ShowProductResponse(
                         productID,
                         ProductDummyGen.genProductName(),
                         RandomUtil.Range(1000, 11000 + 1),
@@ -54,7 +54,7 @@ public class ProductController {
     @GetMapping("/range")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "M 일간 최대 판매한 N 개의 상품들을 조회하기", description = "query parameter days-within, top 은 0보다 큰 정수.")
-    public ApiResponse<ShowTopNProductsWithinMDaysReply> showRangedProducts(
+    public ApiResponse<ShowTopNProductsWithinMDaysResponse> showRangedProducts(
             @RequestParam(name = "days-within") int daysWithin,
             @RequestParam(name = "top") int top
     ) {
@@ -72,6 +72,6 @@ public class ProductController {
         return new ApiResponse<>(
                 ProductMessages.PRODUCT_RANGE_QUERY_SUCCESS,
                 Messages.CODE_OK,
-                new ShowTopNProductsWithinMDaysReply(products));
+                new ShowTopNProductsWithinMDaysResponse(products));
     }
 }

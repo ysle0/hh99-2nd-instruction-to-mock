@@ -41,7 +41,7 @@ public class WalletControllerE2ETest {
         assertNotNull(response.getBody().getData());
 
         ObjectMapper mapper = new ObjectMapper();
-        ChargeBalanceReply data = mapper.convertValue(response.getBody().getData(), ChargeBalanceReply.class);
+        ChargeBalanceResponse data = mapper.convertValue(response.getBody().getData(), ChargeBalanceResponse.class);
         assertTrue(data.isCharged());
     }
 
@@ -62,7 +62,7 @@ public class WalletControllerE2ETest {
         assertNotNull(response.getBody().getData());
 
         ObjectMapper mapper = new ObjectMapper();
-        ChargeBalanceReply data = mapper.convertValue(response.getBody().getData(), ChargeBalanceReply.class);
+        ChargeBalanceResponse data = mapper.convertValue(response.getBody().getData(), ChargeBalanceResponse.class);
         assertFalse(data.isCharged());
     }
 
@@ -83,7 +83,7 @@ public class WalletControllerE2ETest {
         assertNotNull(response.getBody().getData());
 
         ObjectMapper mapper = new ObjectMapper();
-        ChargeBalanceReply data = mapper.convertValue(response.getBody().getData(), ChargeBalanceReply.class);
+        ChargeBalanceResponse data = mapper.convertValue(response.getBody().getData(), ChargeBalanceResponse.class);
         assertFalse(data.isCharged());
     }
 
@@ -105,7 +105,7 @@ public class WalletControllerE2ETest {
         assertNotNull(response.getBody().getData());
 
         ObjectMapper mapper = new ObjectMapper();
-        ShowBalanceReply data = mapper.convertValue(response.getBody().getData(), ShowBalanceReply.class);
+        ShowBalanceResponse data = mapper.convertValue(response.getBody().getData(), ShowBalanceResponse.class);
         assertTrue(data.balance() >= 0);
     }
 
@@ -131,14 +131,14 @@ public class WalletControllerE2ETest {
         assertEquals(WalletMessages.CHARGE_SUCCESS, response1.getBody().getMessage());
         assertEquals(Messages.CODE_OK, response1.getBody().getCode());
         ObjectMapper mapper = new ObjectMapper();
-        ChargeBalanceReply data1 = mapper.convertValue(response1.getBody().getData(), ChargeBalanceReply.class);
+        ChargeBalanceResponse data1 = mapper.convertValue(response1.getBody().getData(), ChargeBalanceResponse.class);
         assertTrue(data1.isCharged());
 
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         assertNotNull(response2.getBody());
         assertEquals(WalletMessages.CHARGE_SUCCESS, response2.getBody().getMessage());
         assertEquals(Messages.CODE_OK, response2.getBody().getCode());
-        ChargeBalanceReply data2 = mapper.convertValue(response2.getBody().getData(), ChargeBalanceReply.class);
+        ChargeBalanceResponse data2 = mapper.convertValue(response2.getBody().getData(), ChargeBalanceResponse.class);
         assertTrue(data2.isCharged());
     }
 
