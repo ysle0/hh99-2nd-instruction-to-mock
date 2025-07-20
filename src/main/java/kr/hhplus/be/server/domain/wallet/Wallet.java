@@ -1,0 +1,27 @@
+package kr.hhplus.be.server.domain.wallet;
+
+import jakarta.persistence.*;
+import kr.hhplus.be.server.domain.user.User;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Entity
+@Table(name = "wallets")
+public class Wallet {
+    @Id
+    @Column(name = "user_id")
+    private UUID userID;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(name = "balance", nullable = false)
+    private int balance;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+}
