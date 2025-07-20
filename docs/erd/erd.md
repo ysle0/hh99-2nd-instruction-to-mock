@@ -31,7 +31,7 @@ erDiagram
 %%  ----- ----- products ----- -----
 
 %%  ----- ----- orders ----- -----
-    orders }o--o{ orders_to_discount_coupons: in_order
+    orders ||--o{ orders_to_discount_coupons: in_order
     orders ||--o{ orders_to_products: in_order
     orders {
         uuid id PK
@@ -43,7 +43,7 @@ erDiagram
 
 %%  ----- ----- discount_coupons ----- -----
     discount_coupons }o--o{ users_to_discount_coupons: assigned_to
-    discount_coupons }o--o{ orders_to_discount_coupons: applied_to
+    discount_coupons ||--o{ orders_to_discount_coupons: applied_to
     discount_coupons {
         uuid id PK
         enum type "('AMOUNT', 'PERCENT') 할인금액, 할인 퍼센티지"
