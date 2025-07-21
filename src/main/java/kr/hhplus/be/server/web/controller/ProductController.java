@@ -2,10 +2,10 @@ package kr.hhplus.be.server.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.hhplus.be.server.domain.Messages;
+import kr.hhplus.be.server.shared.Messages;
 import kr.hhplus.be.server.domain.product.ProductMessages;
-import kr.hhplus.be.server.util.ProductDummyGen;
-import kr.hhplus.be.server.util.RandomUtil;
+import kr.hhplus.be.server.shared.ProductDummyGen;
+import kr.hhplus.be.server.shared.RandomUtil;
 import kr.hhplus.be.server.web.dto.ApiResponse;
 import kr.hhplus.be.server.web.dto.DummyProduct;
 import kr.hhplus.be.server.web.dto.ShowProductResponse;

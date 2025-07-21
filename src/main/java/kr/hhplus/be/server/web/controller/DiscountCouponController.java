@@ -2,9 +2,9 @@ package kr.hhplus.be.server.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.hhplus.be.server.domain.Messages;
+import kr.hhplus.be.server.shared.Messages;
 import kr.hhplus.be.server.domain.discountCoupon.DiscountCouponMessages;
-import kr.hhplus.be.server.util.RandomUtil;
+import kr.hhplus.be.server.shared.RandomUtil;
 import kr.hhplus.be.server.web.dto.ApiResponse;
 import kr.hhplus.be.server.web.dto.IssueInOrderOfArrivalResponse;
 import kr.hhplus.be.server.web.dto.IssueInOrderOfArrivalRequest;

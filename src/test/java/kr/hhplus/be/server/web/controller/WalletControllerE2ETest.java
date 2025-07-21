@@ -2,7 +2,7 @@ package kr.hhplus.be.server.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.TestcontainersConfiguration;
-import kr.hhplus.be.server.domain.Messages;
+import kr.hhplus.be.server.shared.Messages;
 import kr.hhplus.be.server.domain.wallet.WalletMessages;
 import kr.hhplus.be.server.web.dto.*;
 import org.junit.jupiter.api.Test;

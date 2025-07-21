@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.web.controller;
 
 import kr.hhplus.be.server.TestcontainersConfiguration;
-import kr.hhplus.be.server.domain.Messages;
+import kr.hhplus.be.server.shared.Messages;
 import kr.hhplus.be.server.domain.discountCoupon.DiscountCouponMessages;
 import kr.hhplus.be.server.web.dto.ApiResponse;
 import kr.hhplus.be.server.web.dto.IssueInOrderOfArrivalRequest;

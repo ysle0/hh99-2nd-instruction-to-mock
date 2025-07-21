@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.util;
+package kr.hhplus.be.server.shared;
 
 import java.util.ArrayList;
 import java.util.List;
