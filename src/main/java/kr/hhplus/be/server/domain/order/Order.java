@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.discountCoupon.DiscountCoupon;
 import kr.hhplus.be.server.domain.discountCoupon.DiscountCouponType;
 import kr.hhplus.be.server.domain.user.User;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -11,6 +14,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@ToString
+@Getter
+@Setter
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,5 +42,6 @@ public class Order {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "order")
+    @ToString.Exclude
     private List<OrderToProduct> orderToProducts;
 }

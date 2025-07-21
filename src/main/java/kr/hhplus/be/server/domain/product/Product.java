@@ -1,15 +1,19 @@
 package kr.hhplus.be.server.domain.product;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "products")
+@Getter
+@Setter
+@ToString
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
