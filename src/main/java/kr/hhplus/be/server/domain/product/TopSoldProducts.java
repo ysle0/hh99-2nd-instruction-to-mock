@@ -18,9 +18,6 @@ public class TopSoldProducts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product_id", nullable = false, unique = true)
-    private Long productId;
-
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 

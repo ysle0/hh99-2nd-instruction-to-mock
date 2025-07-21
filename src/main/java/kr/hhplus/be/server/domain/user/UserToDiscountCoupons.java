@@ -21,13 +21,9 @@ public class UserToDiscountCoupons {
     private Long id;
 
     @ManyToOne
-    @MapsId("userId")
-    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @MapsId("discount_coupon_id")
-    @JoinColumn(name = "discount_coupon_id")
     private DiscountCoupon discountCoupon;
 
     @Column(name = "owned_quantity", nullable = false)

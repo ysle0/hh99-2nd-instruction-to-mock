@@ -1,15 +1,13 @@
 package kr.hhplus.be.server.domain.discountCoupon;
 
 import jakarta.persistence.*;
-import kr.hhplus.be.server.domain.user.UserToDiscountCoupons;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "discount_coupons")
@@ -35,8 +33,4 @@ public class DiscountCoupon {
 
     @Column(name = "expired_at")
     private LocalDateTime expiredAt;
-
-    @OneToMany(mappedBy = "discountCoupon")
-    @ToString.Exclude
-    private List<UserToDiscountCoupons> usersToDiscountedCoupons;
 }
