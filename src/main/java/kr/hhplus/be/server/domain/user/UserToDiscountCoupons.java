@@ -6,13 +6,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "user_to_discount_coupons")
 public class UserToDiscountCoupons {
     @EmbeddedId
-    private UUID id;
+    private Long id;
 
     @ManyToOne
     @MapsId("user_id")

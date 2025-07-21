@@ -11,7 +11,6 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -20,9 +19,9 @@ import java.util.UUID;
 @ToString
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
-    private UUID id;
+    private Long id;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

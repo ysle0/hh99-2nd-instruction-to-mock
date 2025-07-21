@@ -5,14 +5,14 @@ import kr.hhplus.be.server.domain.user.User;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "wallets")
 public class Wallet {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private UUID userID;
+    private Long userID;
 
     @OneToOne
     @MapsId
