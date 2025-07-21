@@ -1,6 +1,4 @@
 package kr.hhplus.be.server.web.dto;
 
-import java.util.UUID;
-
-public record OrderProductRequest(UUID userID, UUID productID, int quantity) {
+public record OrderProductRequest(Long userID, Long productID, int quantity) {
 }

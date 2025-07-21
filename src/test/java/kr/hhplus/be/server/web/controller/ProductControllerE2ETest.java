@@ -5,7 +5,7 @@ import kr.hhplus.be.server.shared.Messages;
 import kr.hhplus.be.server.domain.product.ProductMessages;
 import kr.hhplus.be.server.web.dto.ApiResponse;
 import kr.hhplus.be.server.web.dto.ShowProductResponse;
-import kr.hhplus.be.server.web.dto.ShowTopNProductsWithinMDaysResponse;
+import kr.hhplus.be.server.web.dto.ShowTopProductsWithinDates;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +73,7 @@ public class ProductControllerE2ETest {
         assertNotNull(response.getBody().getData());
         
         ObjectMapper mapper = new ObjectMapper();
-        ShowTopNProductsWithinMDaysResponse data = mapper.convertValue(response.getBody().getData(), ShowTopNProductsWithinMDaysResponse.class);
+        ShowTopProductsWithinDates data = mapper.convertValue(response.getBody().getData(), ShowTopProductsWithinDates.class);
         assertNotNull(data.products());
         assertTrue(data.products().size() <= top);
 
@@ -106,14 +106,14 @@ public class ProductControllerE2ETest {
         assertEquals(ProductMessages.PRODUCT_RANGE_QUERY_SUCCESS, response1.getBody().getMessage());
         assertEquals(Messages.CODE_OK, response1.getBody().getCode());
         ObjectMapper mapper = new ObjectMapper();
-        ShowTopNProductsWithinMDaysResponse data1 = mapper.convertValue(response1.getBody().getData(), ShowTopNProductsWithinMDaysResponse.class);
+        ShowTopProductsWithinDates data1 = mapper.convertValue(response1.getBody().getData(), ShowTopProductsWithinDates.class);
         assertTrue(data1.products().size() <= 3);
 
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         assertNotNull(response2.getBody());
         assertEquals(ProductMessages.PRODUCT_RANGE_QUERY_SUCCESS, response2.getBody().getMessage());
         assertEquals(Messages.CODE_OK, response2.getBody().getCode());
-        ShowTopNProductsWithinMDaysResponse data2 = mapper.convertValue(response2.getBody().getData(), ShowTopNProductsWithinMDaysResponse.class);
+        ShowTopProductsWithinDates data2 = mapper.convertValue(response2.getBody().getData(), ShowTopProductsWithinDates.class);
         assertTrue(data2.products().size() <= 3);
     }
 
