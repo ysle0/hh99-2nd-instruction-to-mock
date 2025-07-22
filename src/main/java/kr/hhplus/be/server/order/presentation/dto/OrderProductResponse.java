@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.order.presentation.dto;
 
-import kr.hhplus.be.server.order.domain.OrderMessages;
+import kr.hhplus.be.server.order.domain.misc.OrderMessages;
 import kr.hhplus.be.server.shared.Messages;
 import kr.hhplus.be.server.shared.api.ApiResponse;
 

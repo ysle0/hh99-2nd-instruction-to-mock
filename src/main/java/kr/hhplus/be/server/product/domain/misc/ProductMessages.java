@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.product.domain;
+package kr.hhplus.be.server.product.domain.misc;
 
 public final class ProductMessages {
     public static final String PRODUCT_QUERY_SUCCESS = "상품 조회가 완료되었습니다.";

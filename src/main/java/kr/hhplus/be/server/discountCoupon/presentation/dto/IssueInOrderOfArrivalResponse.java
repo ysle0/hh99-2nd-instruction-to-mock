@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.discountCoupon.presentation.dto;
 
-import kr.hhplus.be.server.discountCoupon.domain.DiscountCouponMessage;
+import kr.hhplus.be.server.discountCoupon.domain.misc.DiscountCouponMessage;
 import kr.hhplus.be.server.shared.Messages;
 import kr.hhplus.be.server.shared.api.ApiResponse;
 

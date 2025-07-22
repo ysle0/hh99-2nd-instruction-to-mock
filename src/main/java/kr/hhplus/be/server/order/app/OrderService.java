@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.order.app;
 
 import kr.hhplus.be.server.order.infra.OrderJpaRepository;
+import kr.hhplus.be.server.order.presentation.dto.OrderProductResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +14,7 @@ public class OrderService {
         this.orderRepo = or;
     }
 
-    public kr.hhplus.be.server.order.presentation.dto.OrderProductResponse orderProduct(long userID, long productID, int quantity) {
+    public OrderProductResponse orderProduct(long userID, long productID, int quantity) {
         return null;
     }
 }

@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.product.presentation.dto;
 
 import kr.hhplus.be.server.product.domain.Product;
-import kr.hhplus.be.server.product.domain.ProductMessages;
+import kr.hhplus.be.server.product.domain.misc.ProductMessages;
 import kr.hhplus.be.server.shared.Messages;
 import kr.hhplus.be.server.shared.api.ApiResponse;
 

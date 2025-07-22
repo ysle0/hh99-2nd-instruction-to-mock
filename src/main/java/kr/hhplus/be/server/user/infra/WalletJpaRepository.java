@@ -1,6 +1,6 @@
-package kr.hhplus.be.server.user.wallet.infra;
+package kr.hhplus.be.server.user.infra;
 
-import kr.hhplus.be.server.user.wallet.domain.Wallet;
+import kr.hhplus.be.server.user.domain.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

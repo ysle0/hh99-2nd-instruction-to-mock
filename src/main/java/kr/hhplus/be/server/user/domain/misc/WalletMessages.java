@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.user.wallet.domain;
+package kr.hhplus.be.server.user.domain.misc;
 
 public final class WalletMessages {
     public static final String CHARGE_SUCCESS = "금액 충전을 완료했습니다.";

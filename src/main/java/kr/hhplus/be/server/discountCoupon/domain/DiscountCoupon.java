@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.discountCoupon.domain;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.discountCoupon.domain.misc.DiscountCouponType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

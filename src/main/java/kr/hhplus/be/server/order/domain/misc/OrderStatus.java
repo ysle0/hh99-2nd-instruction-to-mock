@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.order.domain;
+package kr.hhplus.be.server.order.domain.misc;
 
 public enum OrderStatus {
     PENDING,

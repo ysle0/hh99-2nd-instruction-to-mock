@@ -2,7 +2,7 @@ package kr.hhplus.be.server.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.TestcontainersConfiguration;
-import kr.hhplus.be.server.order.domain.OrderMessages;
+import kr.hhplus.be.server.order.domain.misc.OrderMessages;
 import kr.hhplus.be.server.order.presentation.dto.OrderProductRequest;
 import kr.hhplus.be.server.order.presentation.dto.OrderProductResponse;
 import kr.hhplus.be.server.shared.Messages;

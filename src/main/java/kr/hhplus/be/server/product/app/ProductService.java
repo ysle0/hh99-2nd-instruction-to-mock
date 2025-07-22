@@ -1,24 +1,31 @@
 package kr.hhplus.be.server.product.app;
 
-import kr.hhplus.be.server.product.infra.ProductJpaRepository;
+import kr.hhplus.be.server.product.domain.ProductRepository;
+import kr.hhplus.be.server.product.presentation.dto.ShowProductResponse;
+import kr.hhplus.be.server.product.presentation.dto.ShowTopProductsWithinDatesResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
 
-    private final ProductJpaRepository productRepo;
+    private final ProductRepository productRepo;
+    private final ProductRepository productRedisRepo;
 
     public ProductService(
-            ProductJpaRepository pr
+            @Qualifier("productJpaRepository") ProductRepository productJpaRepo,
+            @Qualifier("productRedisRepository") ProductRepository productRedisRepo
     ) {
-        this.productRepo = pr;
+        this.productRepo = productJpaRepo;
+
+        this.productRedisRepo = productRedisRepo;
     }
 
-    public kr.hhplus.be.server.product.presentation.dto.ShowProductResponse showProduct(long productId) {
+    public ShowProductResponse showProduct(long productId) {
         return null;
     }
 
-    public kr.hhplus.be.server.product.presentation.dto.ShowTopProductsWithinDatesResponse showTopProductsWithinDates(int daysWithin, int top) {
+    public ShowTopProductsWithinDatesResponse showTopProductsWithinDates(int daysWithin, int top) {
         return null;
     }
 

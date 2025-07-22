@@ -1,18 +1,24 @@
 package kr.hhplus.be.server.discountCoupon.app;
 
-import kr.hhplus.be.server.discountCoupon.infra.DiscountCouponJpaRepository;
+import kr.hhplus.be.server.discountCoupon.domain.DiscountCouponRepository;
+import kr.hhplus.be.server.discountCoupon.presentation.dto.IssueInOrderOfArrivalResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DiscountCouponService {
-    private final DiscountCouponJpaRepository discountCouponRepo;
+    private final DiscountCouponRepository discountCouponRepo;
+    private final DiscountCouponRepository discountCouponCacheRepo;
 
-    public DiscountCouponService(DiscountCouponJpaRepository dcr
+    public DiscountCouponService(
+            @Qualifier("discountCouponJpaRepository") DiscountCouponRepository dcDbRepo,
+            @Qualifier("discountCouponRedisRepository") DiscountCouponRepository dcCacheRepo
     ) {
-        this.discountCouponRepo = dcr;
+        this.discountCouponRepo = dcDbRepo;
+        this.discountCouponCacheRepo = dcCacheRepo;
     }
 
-    public kr.hhplus.be.server.discountCoupon.presentation.dto.IssueInOrderOfArrivalResponse issueInOrderArrival(long userId) {
+    public IssueInOrderOfArrivalResponse issueInOrderArrival(long userId) {
         // 선착순 쿠폰 발급
         return null;
     }

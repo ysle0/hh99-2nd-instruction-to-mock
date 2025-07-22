@@ -2,8 +2,9 @@ package kr.hhplus.be.server.order.domain;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.discountCoupon.domain.DiscountCoupon;
-import kr.hhplus.be.server.discountCoupon.domain.DiscountCouponType;
-import kr.hhplus.be.server.user.User;
+import kr.hhplus.be.server.discountCoupon.domain.misc.DiscountCouponType;
+import kr.hhplus.be.server.order.domain.misc.OrderStatus;
+import kr.hhplus.be.server.user.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
