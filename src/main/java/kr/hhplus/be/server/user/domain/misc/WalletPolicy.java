@@ -1,0 +1,6 @@
+package kr.hhplus.be.server.user.domain.misc;
+
+public class WalletPolicy {
+    public static final int MAX_CHARGE_AMOUNT_AT_ONCE = 100_000_000;
+    public static final int MIN_CHARGE_AMOUNT_AT_ONCE = 5_000;
+}
