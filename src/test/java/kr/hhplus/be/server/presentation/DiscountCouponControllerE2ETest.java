@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.web.controller;
+package kr.hhplus.be.server.presentation;
 
 import kr.hhplus.be.server.TestcontainersConfiguration;
 import kr.hhplus.be.server.discountCoupon.domain.misc.DiscountCouponMessage;
