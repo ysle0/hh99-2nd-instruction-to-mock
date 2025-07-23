@@ -52,32 +52,26 @@ public class WalletUnitTest {
         @Test
         public void ShouldNeverChargeBelowMinimumBalances() {
 
-            final int belowbalance = WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE - 232;
-            var wallet = Wallet.builder()
-                    .userId(USER_ID)
-                    .build();
+            final int belowBalance = WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE - 232;
             var repo = Mockito.mock(WalletRepository.class);
             var svc = new WalletService(repo);
 
             var ex = assertThrows(PolicyBelowMinChargeAmountException.class,
-                    () -> svc.chargeBalance(USER_ID, belowbalance));
-            assert ex.getMessage().equals(PolicyBelowMinChargeAmountException.MakeMessage(belowbalance));
+                    () -> svc.chargeBalance(USER_ID, belowBalance));
+            assert ex.getMessage().equals(PolicyBelowMinChargeAmountException.MakeMessage(belowBalance));
         }
 
         @DisplayName("최대 충전금액보다 큰 금액은 PolicyAboveMaxChargeAmountException 을 던짐.")
         @Test
         public void ShouldNeverChargeAboveMaximumBalances() {
 
-            final int maxbalance = WalletPolicy.MAX_CHARGE_AMOUNT_AT_ONCE + 232;
-            var wallet = Wallet.builder()
-                    .userId(USER_ID)
-                    .build();
+            final int maxBalance = WalletPolicy.MAX_CHARGE_AMOUNT_AT_ONCE + 232;
             var repo = Mockito.mock(WalletRepository.class);
             var svc = new WalletService(repo);
 
             var ex = assertThrows(PolicyAboveMaxChargeAmountException.class,
-                    () -> svc.chargeBalance(USER_ID, maxbalance));
-            assert ex.getMessage().equals(PolicyAboveMaxChargeAmountException.MakeMessage(maxbalance));
+                    () -> svc.chargeBalance(USER_ID, maxBalance));
+            assert ex.getMessage().equals(PolicyAboveMaxChargeAmountException.MakeMessage(maxBalance));
         }
 
         @DisplayName("양수 포인트는 정상 충전되어야 함. (최소, 최대) 포인트 충전 포함")
@@ -103,11 +97,11 @@ public class WalletUnitTest {
         @DisplayName("여러번 충전한 결과가 동일해야 함")
         @ParameterizedTest(name = "#{index} sum of {0} = {1}")
         @MethodSource("sourcesAndExpect")
-        public void ShouldStackUpAfterMultipleCharge(List<Integer> nums, List<Integer> expects) {
+        public void ShouldStackUpAfterMultipleCharge(List<Integer> srcs, List<Integer> expects) {
             var repo = new WalletFakeRepository(USER_ID);
             var svc = new WalletService(repo);
 
-            List<ChargeBalanceResponse> resps = nums.stream()
+            List<ChargeBalanceResponse> resps = srcs.stream()
                     .map(n -> svc.chargeBalance(USER_ID, n))
                     .toList();
 
@@ -121,8 +115,12 @@ public class WalletUnitTest {
 
         static Stream<Arguments> sourcesAndExpect() {
             return Stream.of(
-                    Arguments.of(List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 10_000, 100_000), List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 15_000, 115_000)),
-                    Arguments.of(List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 100_000, 10_000_000), List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 105_000, 10_105_000))
+                    Arguments.of(
+                            List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 10_000, 100_000),
+                            List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 15_000, 115_000)),
+                    Arguments.of(
+                            List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 100_000, 10_000_000),
+                            List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 105_000, 10_105_000))
             );
         }
     }
@@ -171,11 +169,11 @@ public class WalletUnitTest {
         @DisplayName("여러번 충전한 포인트를 그대로 조회 가능 해야함.")
         @ParameterizedTest(name = "#{index} sum of {0} = {1}")
         @MethodSource("sourcesAndExpect")
-        public void ShouldShowMultipleChargedBalances(List<Integer> nums, List<Integer> expects) {
+        public void ShouldShowMultipleChargedBalances(List<Integer> srcs, List<Integer> expects) {
             var repo = new WalletFakeRepository(USER_ID);
             var svc = new WalletService(repo);
 
-            List<ChargeBalanceResponse> resps = nums.stream()
+            List<ChargeBalanceResponse> resps = srcs.stream()
                     .map(x -> svc.chargeBalance(USER_ID, x))
                     .toList();
 
@@ -191,8 +189,12 @@ public class WalletUnitTest {
 
         static Stream<Arguments> sourcesAndExpect() {
             return Stream.of(
-                    Arguments.of(List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 10_000, 100_000), List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 15_000, 115_000)),
-                    Arguments.of(List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 100_000, 10_000_000), List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 105_000, 10_105_000))
+                    Arguments.of(
+                            List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 10_000, 100_000),
+                            List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 15_000, 115_000)),
+                    Arguments.of(
+                            List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 100_000, 10_000_000),
+                            List.of(WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE, 105_000, 10_105_000))
             );
         }
     }
