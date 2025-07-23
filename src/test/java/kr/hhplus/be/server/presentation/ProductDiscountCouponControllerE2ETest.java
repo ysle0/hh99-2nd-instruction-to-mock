@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.TestcontainersConfiguration;
 import kr.hhplus.be.server.product.domain.misc.ProductMessages;
 import kr.hhplus.be.server.product.presentation.dto.ShowProductResponse;
-import kr.hhplus.be.server.product.presentation.dto.ShowTopProductsWithinDatesResponse;
+import kr.hhplus.be.server.product.statProduct.presentation.dto.ShowTopSoldProductsWithinDatesResponse;
 import kr.hhplus.be.server.shared.Messages;
 import kr.hhplus.be.server.shared.api.ApiResponse;
 import org.junit.jupiter.api.Test;
@@ -71,7 +71,7 @@ public class ProductDiscountCouponControllerE2ETest {
         assertNotNull(response.getBody().getData());
 
         ObjectMapper mapper = new ObjectMapper();
-        ShowTopProductsWithinDatesResponse data = mapper.convertValue(response.getBody().getData(), ShowTopProductsWithinDatesResponse.class);
+        ShowTopSoldProductsWithinDatesResponse data = mapper.convertValue(response.getBody().getData(), ShowTopSoldProductsWithinDatesResponse.class);
         assertNotNull(data.products());
         assertTrue(data.products().size() <= top);
 
@@ -104,14 +104,14 @@ public class ProductDiscountCouponControllerE2ETest {
         assertEquals(ProductMessages.PRODUCT_RANGE_QUERY_SUCCESS, response1.getBody().getMessage());
         assertEquals(Messages.OK, response1.getBody().getCode());
         ObjectMapper mapper = new ObjectMapper();
-        ShowTopProductsWithinDatesResponse data1 = mapper.convertValue(response1.getBody().getData(), ShowTopProductsWithinDatesResponse.class);
+        ShowTopSoldProductsWithinDatesResponse data1 = mapper.convertValue(response1.getBody().getData(), ShowTopSoldProductsWithinDatesResponse.class);
         assertTrue(data1.products().size() <= 3);
 
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         assertNotNull(response2.getBody());
         assertEquals(ProductMessages.PRODUCT_RANGE_QUERY_SUCCESS, response2.getBody().getMessage());
         assertEquals(Messages.OK, response2.getBody().getCode());
-        ShowTopProductsWithinDatesResponse data2 = mapper.convertValue(response2.getBody().getData(), ShowTopProductsWithinDatesResponse.class);
+        ShowTopSoldProductsWithinDatesResponse data2 = mapper.convertValue(response2.getBody().getData(), ShowTopSoldProductsWithinDatesResponse.class);
         assertTrue(data2.products().size() <= 3);
     }
 

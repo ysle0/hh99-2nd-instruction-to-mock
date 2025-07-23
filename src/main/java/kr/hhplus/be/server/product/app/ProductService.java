@@ -9,24 +9,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-    private final ProductRepository productRepo;
-    private final ProductRepository productRedisRepo;
+    private final ProductRepository prdDbRepo;
 
     public ProductService(
-            @Qualifier("productJpaRepository") ProductRepository productJpaRepo,
-            @Qualifier("productRedisRepository") ProductRepository productRedisRepo
+            @Qualifier("productJpaRepository") ProductRepository prdDbRepo
     ) {
-        this.productRepo = productJpaRepo;
-
-        this.productRedisRepo = productRedisRepo;
+        this.prdDbRepo = prdDbRepo;
     }
 
     public ShowProductResponse showProduct(long productId) {
-        return null;
     }
 
-    public ShowTopProductsWithinDatesResponse showTopProductsWithinDates(int daysWithin, int top) {
-        return null;
     }
 
 }

@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.product.app.ProductService;
 import kr.hhplus.be.server.product.presentation.dto.ShowProductResponse;
-import kr.hhplus.be.server.product.presentation.dto.ShowTopProductsWithinDatesResponse;
 import kr.hhplus.be.server.shared.api.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -28,15 +27,4 @@ public class ProductController {
         return resp.Ok();
     }
 
-    @GetMapping("/range")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "M 일간 최대 판매한 N 개의 상품들을 조회하기", description = "query parameter days-within, top 은 0보다 큰 정수.")
-    public ApiResponse<ShowTopProductsWithinDatesResponse> showTopProductsWithinDates(
-            @RequestParam(name = "days-within") int daysWithin,
-            @RequestParam(name = "top") int top
-    ) {
-        ShowTopProductsWithinDatesResponse resp = productService.showTopProductsWithinDates(daysWithin, top);
-
-        return resp.Ok();
-    }
 }
