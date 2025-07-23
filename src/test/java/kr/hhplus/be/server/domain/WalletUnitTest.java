@@ -1,15 +1,11 @@
 package kr.hhplus.be.server.domain;
 
 import kr.hhplus.be.server.shared.exception.InvalidUserException;
-import kr.hhplus.be.server.user.app.WalletService;
-import kr.hhplus.be.server.user.domain.Wallet;
-import kr.hhplus.be.server.user.domain.WalletRepository;
-import kr.hhplus.be.server.user.domain.excpetion.policy.PolicyAboveMaxChargeAmountException;
-import kr.hhplus.be.server.user.domain.excpetion.policy.PolicyBelowMinChargeAmountException;
-import kr.hhplus.be.server.user.domain.misc.WalletPolicy;
-import kr.hhplus.be.server.user.infra.WalletFakeRepository;
-import kr.hhplus.be.server.user.presentation.dto.ChargeBalanceResponse;
-import kr.hhplus.be.server.user.presentation.dto.ShowBalanceResponse;
+import kr.hhplus.be.server.user.wallet.app.WalletService;
+import kr.hhplus.be.server.user.wallet.domain.*;
+import kr.hhplus.be.server.user.wallet.infra.WalletFakeRepository;
+import kr.hhplus.be.server.user.wallet.presentation.dto.ChargeBalanceResponse;
+import kr.hhplus.be.server.user.wallet.presentation.dto.ShowBalanceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

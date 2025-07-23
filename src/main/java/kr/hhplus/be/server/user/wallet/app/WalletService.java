@@ -1,13 +1,9 @@
-package kr.hhplus.be.server.user.app;
+package kr.hhplus.be.server.user.wallet.app;
 
 import kr.hhplus.be.server.shared.exception.InvalidUserException;
-import kr.hhplus.be.server.user.domain.Wallet;
-import kr.hhplus.be.server.user.domain.WalletRepository;
-import kr.hhplus.be.server.user.domain.excpetion.policy.PolicyAboveMaxChargeAmountException;
-import kr.hhplus.be.server.user.domain.excpetion.policy.PolicyBelowMinChargeAmountException;
-import kr.hhplus.be.server.user.domain.misc.WalletPolicy;
-import kr.hhplus.be.server.user.presentation.dto.ChargeBalanceResponse;
-import kr.hhplus.be.server.user.presentation.dto.ShowBalanceResponse;
+import kr.hhplus.be.server.user.wallet.domain.*;
+import kr.hhplus.be.server.user.wallet.presentation.dto.ChargeBalanceResponse;
+import kr.hhplus.be.server.user.wallet.presentation.dto.ShowBalanceResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

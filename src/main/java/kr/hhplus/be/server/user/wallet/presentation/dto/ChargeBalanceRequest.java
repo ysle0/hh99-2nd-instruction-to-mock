@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.user.presentation.dto;
+package kr.hhplus.be.server.user.wallet.presentation.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;

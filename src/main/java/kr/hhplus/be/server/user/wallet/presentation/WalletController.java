@@ -1,13 +1,13 @@
-package kr.hhplus.be.server.user.presentation;
+package kr.hhplus.be.server.user.wallet.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.shared.api.ApiResponse;
-import kr.hhplus.be.server.user.app.WalletService;
-import kr.hhplus.be.server.user.presentation.dto.ChargeBalanceRequest;
-import kr.hhplus.be.server.user.presentation.dto.ChargeBalanceResponse;
-import kr.hhplus.be.server.user.presentation.dto.ShowBalanceRequest;
-import kr.hhplus.be.server.user.presentation.dto.ShowBalanceResponse;
+import kr.hhplus.be.server.user.wallet.app.WalletService;
+import kr.hhplus.be.server.user.wallet.presentation.dto.ChargeBalanceRequest;
+import kr.hhplus.be.server.user.wallet.presentation.dto.ChargeBalanceResponse;
+import kr.hhplus.be.server.user.wallet.presentation.dto.ShowBalanceRequest;
+import kr.hhplus.be.server.user.wallet.presentation.dto.ShowBalanceResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.user.domain.excpetion.policy;
+package kr.hhplus.be.server.user.wallet.domain;
 
 public class PolicyAboveMaxChargeAmountException extends RuntimeException {
     public PolicyAboveMaxChargeAmountException(int point) {

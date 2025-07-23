@@ -1,7 +1,7 @@
-package kr.hhplus.be.server.user.infra;
+package kr.hhplus.be.server.user.wallet.infra;
 
-import kr.hhplus.be.server.user.domain.Wallet;
-import kr.hhplus.be.server.user.domain.WalletRepository;
+import kr.hhplus.be.server.user.wallet.domain.Wallet;
+import kr.hhplus.be.server.user.wallet.domain.WalletRepository;
 
 import java.util.HashMap;
 import java.util.Map;
