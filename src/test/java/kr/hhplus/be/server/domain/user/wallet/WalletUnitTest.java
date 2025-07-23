@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain;
+package kr.hhplus.be.server.domain.user.wallet;
 
 import kr.hhplus.be.server.shared.exception.InvalidUserException;
 import kr.hhplus.be.server.user.wallet.app.WalletService;
