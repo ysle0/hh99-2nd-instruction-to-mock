@@ -126,7 +126,7 @@ public class OrderDiscountCouponControllerE2ETest {
     @Test
     public void okPartially_orderProduct_multipleOrders() {
         var request1 = new OrderProductRequest(TEST_USER_ID, TEST_PRODUCT_ID, 2);
-        var request2 = new OrderProductRequest(TEST_USER_ID, TEST_PRODUCT_ID, -234);
+        var request2 = new OrderProductRequest(TEST_USER_ID, TEST_PRODUCT_ID, 234);
 
         ResponseEntity<ApiResponse> response1 = restTemplate.postForEntity(
                 "/api/v1/orders/",

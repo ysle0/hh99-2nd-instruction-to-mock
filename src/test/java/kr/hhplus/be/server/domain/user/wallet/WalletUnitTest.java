@@ -98,7 +98,10 @@ public class WalletUnitTest {
         @ParameterizedTest(name = "#{index} sum of {0} = {1}")
         @MethodSource("sourcesAndExpect")
         public void ShouldStackUpAfterMultipleCharge(List<Integer> srcs, List<Integer> expects) {
-            var repo = new WalletFakeRepository(USER_ID);
+            var fakeWallet = Wallet.builder()
+                    .userId(USER_ID)
+                    .build();
+            var repo = new WalletFakeRepository(fakeWallet);
             var svc = new WalletService(repo);
 
             List<ChargeBalanceResponse> resps = srcs.stream()
@@ -170,7 +173,11 @@ public class WalletUnitTest {
         @ParameterizedTest(name = "#{index} sum of {0} = {1}")
         @MethodSource("sourcesAndExpect")
         public void ShouldShowMultipleChargedBalances(List<Integer> srcs, List<Integer> expects) {
-            var repo = new WalletFakeRepository(USER_ID);
+
+            var fakeWallet = Wallet.builder()
+                    .userId(USER_ID)
+                    .build();
+            var repo = new WalletFakeRepository(fakeWallet);
             var svc = new WalletService(repo);
 
             List<ChargeBalanceResponse> resps = srcs.stream()
