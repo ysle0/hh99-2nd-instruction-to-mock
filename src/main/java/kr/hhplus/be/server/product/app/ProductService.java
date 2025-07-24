@@ -22,19 +22,25 @@ public class ProductService {
 
     public ShowProductResponse showProduct(long productId) {
         // NOTE: 이후 read cache 처리 필요
-        Optional<Product> found = prdDbRepo.findByProductId(productId);
-        if (found.isEmpty()) {
-            throw new InvalidProductIdException(productId);
-        }
-
-        Product foundUnwrap = found.get();
+        // 1. 도메인 객체 조회
+        Product product = findProductById(productId);
 
         return new ShowProductResponse(
-                foundUnwrap.getId(),
-                foundUnwrap.getName(),
-                foundUnwrap.getPrice(),
-                foundUnwrap.getQuantity()
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getQuantity()
         );
+    }
+    
+    // === 도메인 객체 조회 헬퍼 메서드 ===
+    
+    private Product findProductById(long productId) {
+        Optional<Product> foundProduct = prdDbRepo.findByProductId(productId);
+        if (foundProduct.isEmpty()) {
+            throw new InvalidProductIdException(productId);
+        }
+        return foundProduct.get();
     }
 
 }

@@ -153,6 +153,7 @@ public class OrderUnitTest {
             var fakeProduct = Product.builder()
                     .id(PRODUCT_ID)
                     .quantity(500)
+                    .price(100)
                     .build();
             var pr = new ProductFakeRepository(fakeProduct);
 

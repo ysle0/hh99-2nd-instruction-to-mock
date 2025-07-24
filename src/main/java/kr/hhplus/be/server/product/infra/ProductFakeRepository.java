@@ -4,7 +4,6 @@ import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.product.domain.ProductRepository;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,7 +26,7 @@ public class ProductFakeRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> findTopProducts(int withinDays) {
-        return List.of();
+    public Product save(Product newProduct) {
+        return null;
     }
 }

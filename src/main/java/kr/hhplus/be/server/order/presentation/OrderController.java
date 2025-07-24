@@ -22,10 +22,8 @@ class OrderController {
     @Operation(summary = "상품 1종류를 1~N개 주문하기")
     ApiResponse<OrderProductResponse> orderProduct(
             @RequestBody OrderProductRequest r) {
-        if (r.quantity() <= 0) {
-            return OrderProductResponse.InvalidQuantity();
-        }
-
+        
+        // 도메인 객체가 비즈니스 검증을 담당하므로 Controller는 단순 위임만
         OrderProductResponse resp = orderService.orderProduct(
                 r.userID(), r.productID(), r.quantity());
 

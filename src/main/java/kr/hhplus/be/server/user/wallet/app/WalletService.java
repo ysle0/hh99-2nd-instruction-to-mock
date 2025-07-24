@@ -18,36 +18,33 @@ public class WalletService {
         this.walletRepo = wr;
     }
 
-    public ChargeBalanceResponse chargeBalance(long userId, int newBalance) {
-        if (newBalance < WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE) {
-            throw new PolicyBelowMinChargeAmountException(newBalance);
-        }
-
-        if (newBalance > WalletPolicy.MAX_CHARGE_AMOUNT_AT_ONCE) {
-            throw new PolicyAboveMaxChargeAmountException(newBalance);
-        }
-
-        Optional<Wallet> found = walletRepo.findByUserId(userId);
-        if (found.isEmpty()) {
-            throw new InvalidUserException(userId);
-        }
-
-        var foundUnwrap = found.get();
-        final int prvBalance = foundUnwrap.getBalance();
-        final int chargedBalance = prvBalance + newBalance;
-        foundUnwrap.setBalance(chargedBalance);
-        Wallet saved = walletRepo.save(foundUnwrap);
+    public ChargeBalanceResponse chargeBalance(long userId, int chargeAmount) {
+        // 1. 도메인 객체 조회
+        Wallet wallet = findWalletByUserId(userId);
+        
+        // 2. 도메인 객체에게 비즈니스 로직 위임 (정책 검증 포함)
+        wallet.charge(chargeAmount);
+        
+        // 3. 저장 (트랜잭션 경계 관리)
+        Wallet saved = walletRepo.save(wallet);
 
         return new ChargeBalanceResponse(true, saved.getBalance());
     }
 
     public ShowBalanceResponse showBalance(Long userId) {
-        Optional<Wallet> found = walletRepo.findByUserId(userId);
-        if (found.isEmpty()) {
+        // 1. 도메인 객체 조회
+        Wallet wallet = findWalletByUserId(userId);
+        
+        return new ShowBalanceResponse(wallet.getBalance());
+    }
+    
+    // === 도메인 객체 조회 헬퍼 메서드 ===
+    
+    private Wallet findWalletByUserId(long userId) {
+        Optional<Wallet> foundWallet = walletRepo.findByUserId(userId);
+        if (foundWallet.isEmpty()) {
             throw new InvalidUserException(userId);
         }
-
-        Wallet foundUnwrap = found.get();
-        return new ShowBalanceResponse(foundUnwrap.getBalance());
+        return foundWallet.get();
     }
 }

@@ -54,6 +54,12 @@ public class WalletUnitTest {
 
             final int belowBalance = WalletPolicy.MIN_CHARGE_AMOUNT_AT_ONCE - 232;
             var repo = Mockito.mock(WalletRepository.class);
+            when(repo.findByUserId(anyLong())).thenReturn(Optional.of(
+                    Wallet.builder()
+                            .userId(USER_ID)
+                            .balance(0)
+                            .build()
+            ));
             var svc = new WalletService(repo);
 
             var ex = assertThrows(PolicyBelowMinChargeAmountException.class,
@@ -67,6 +73,12 @@ public class WalletUnitTest {
 
             final int maxBalance = WalletPolicy.MAX_CHARGE_AMOUNT_AT_ONCE + 232;
             var repo = Mockito.mock(WalletRepository.class);
+            when(repo.findByUserId(anyLong())).thenReturn(Optional.of(
+                    Wallet.builder()
+                            .userId(USER_ID)
+                            .balance(0)
+                            .build()
+            ));
             var svc = new WalletService(repo);
 
             var ex = assertThrows(PolicyAboveMaxChargeAmountException.class,
