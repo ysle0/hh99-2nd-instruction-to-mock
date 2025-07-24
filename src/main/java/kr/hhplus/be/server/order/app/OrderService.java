@@ -10,6 +10,7 @@ import kr.hhplus.be.server.product.domain.exception.InvalidProductQuantityExcept
 import kr.hhplus.be.server.shared.exception.InvalidUserException;
 import kr.hhplus.be.server.user.wallet.domain.Wallet;
 import kr.hhplus.be.server.user.wallet.domain.WalletRepository;
+import kr.hhplus.be.server.user.wallet.domain.exception.InsufficientWalletBalanceException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -53,6 +54,16 @@ public class OrderService {
         if (quantityDiff < 0) {
             throw new InsufficientProductStockException(productID, quantity);
         }
+
+        Wallet foundWalletUnwrap = foundWallet.get();
+        final int totalPrice = foundProductUnwrap.getPrice() * quantity;
+        final int balanceDiff = foundWalletUnwrap.getBalance() - totalPrice;
+        if (balanceDiff < 0) {
+            throw new InsufficientWalletBalanceException(totalPrice);
+        }
+
+        foundWalletUnwrap.setBalance(quantityDiff);
+        Wallet saved = walletRepo.save(foundWalletUnwrap);
 
         return null;
     }

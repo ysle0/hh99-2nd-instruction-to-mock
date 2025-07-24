@@ -13,6 +13,7 @@ import kr.hhplus.be.server.product.infra.ProductFakeRepository;
 import kr.hhplus.be.server.shared.exception.InvalidUserException;
 import kr.hhplus.be.server.user.wallet.domain.Wallet;
 import kr.hhplus.be.server.user.wallet.domain.WalletRepository;
+import kr.hhplus.be.server.user.wallet.domain.exception.InsufficientWalletBalanceException;
 import kr.hhplus.be.server.user.wallet.infra.WalletFakeRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -36,7 +37,7 @@ public class OrderUnitTest {
     private static final long PRODUCT_ID = 234L;
     private static final long WRONG_PRODUCT_ID = 234223L;
 
-    @DisplayName("1~N 개 주문 기능 테스트")
+    @DisplayName("1. 1~N 개 주문 기능 테스트")
     @Nested
     class OrderProductTest {
         @DisplayName("재고가 충분한 경우, 1 개 정상 주문이 가능 해야함.")
@@ -153,6 +154,80 @@ public class OrderUnitTest {
                     InvalidProductQuantityException.MakeMessage(PRODUCT_ID, orderQuantity));
         }
 
+
+        @DisplayName("주문 후 재고의 차감이 정상적이어야 함.")
+        @Test
+        public void ShouldProductStockRemainAsItWasOrdered() {
+
+            var or = mock(OrderRepository.class);
+            var wr = mock(WalletRepository.class);
+
+            var expectedWallet = Wallet.builder()
+                    .userId(USER_ID)
+                    .balance(50000)
+                    .build();
+            when(wr.findByUserId(anyLong())).thenReturn(Optional.of(expectedWallet));
+
+            var expectedOrder = Order.builder()
+                    .id(1L)
+                    .build();
+            when(or.save(any())).thenReturn(expectedOrder);
+
+            var fakeProduct = Product.builder()
+                    .id(PRODUCT_ID)
+                    .quantity(500)
+                    .build();
+            var pr = new ProductFakeRepository(fakeProduct);
+
+            var svc = new OrderService(or, wr, pr);
+            final int orderQuantity = 250;
+            svc.orderProduct(USER_ID, PRODUCT_ID, orderQuantity);
+
+            Optional<Product> found = pr.findByProductId(PRODUCT_ID);
+            assert found.isPresent();
+            Product foundUnwrap = found.get();
+            assert foundUnwrap.getQuantity() == 500 - orderQuantity;
+        }
+
+        @DisplayName("주문 이 성공한 후, 잔액 차감이 정상적이어야 함.")
+        @Test
+        public void ShouldBalanceRemainAsOrderSucceeds() {
+
+            var or = mock(OrderRepository.class);
+            var pr = mock(ProductFakeRepository.class);
+            var fakeWallet = Wallet.builder()
+                    .userId(USER_ID)
+                    .balance(500)
+                    .build();
+            var wr = new WalletFakeRepository(fakeWallet);
+
+            var fakeProduct = Product.builder()
+                    .id(PRODUCT_ID)
+                    .quantity(500)
+                    .price(100)
+                    .build();
+            when(pr.findByProductId(anyLong())).thenReturn(Optional.of(fakeProduct));
+
+            var expectedOrder = Order.builder()
+                    .id(1L)
+                    .build();
+            when(or.save(any())).thenReturn(expectedOrder);
+
+            var svc = new OrderService(or, wr, pr);
+            final int orderQuantity = 250;
+            svc.orderProduct(USER_ID, PRODUCT_ID, orderQuantity);
+
+            Optional<Wallet> found = wr.findByUserId(USER_ID);
+            assert found.isPresent();
+            Wallet foundUnwrap = found.get();
+            assert foundUnwrap.getBalance() == fakeWallet.getBalance() - fakeProduct.getPrice() * orderQuantity;
+        }
+    }
+
+
+    @DisplayName("2. 주문 기능에서 실패 테스트")
+    @Nested
+    class OrderProductFailTest {
         @DisplayName("비정상적인 user ID 를 받으면 InvalidUserException 를 던지고, 주문을 취소한다.")
         @Test
         public void ShouldThrowInvalidUserIdException() {
@@ -227,107 +302,37 @@ public class OrderUnitTest {
                     InsufficientProductStockException.MakeMessage(PRODUCT_ID, orderQuantity));
         }
 
-        @DisplayName("주문 후 재고의 차감이 정상적이어야 함.")
+        @DisplayName("주문 총액보다 지갑 잔액이 부족하면 주문이 취소되고, InsufficientWalletBalanceException 을 던짐.")
         @Test
-        public void ShouldProductStockRemainAsItWasOrdered() {
+        public void ShouldThrowInsufficientWalletBalanceException() {
 
             var or = mock(OrderRepository.class);
-            var wr = mock(WalletRepository.class);
 
-            var expectedWallet = Wallet.builder()
-                    .userId(USER_ID)
-                    .balance(50000)
-                    .build();
-            when(wr.findByUserId(anyLong())).thenReturn(Optional.of(expectedWallet));
-
-            var expectedOrder = Order.builder()
-                    .id(1L)
-                    .build();
-            when(or.save(any())).thenReturn(expectedOrder);
+            final int pricePerProduct = 50;
 
             var fakeProduct = Product.builder()
                     .id(PRODUCT_ID)
-                    .quantity(500)
-                    .build();
-            var pr = new ProductFakeRepository(fakeProduct);
-
-            var svc = new OrderService(or, wr, pr);
-            final int orderQuantity = 250;
-            svc.orderProduct(USER_ID, PRODUCT_ID, orderQuantity);
-
-            Optional<Product> found = pr.findByProductId(PRODUCT_ID);
-            assert found.isPresent();
-            Product foundUnwrap = found.get();
-            assert foundUnwrap.getQuantity() == 500 - orderQuantity;
-        }
-
-        @DisplayName("주문 이 성공한 후, 잔액 차감이 정상적이어야 함.")
-        @Test
-        public void ShouldBalanceRemainAsOrderSucceeds() {
-
-            var or = mock(OrderRepository.class);
-            var pr = mock(ProductFakeRepository.class);
-            var fakeWallet = Wallet.builder()
-                    .userId(USER_ID)
-                    .balance(500)
-                    .build();
-            var wr = new WalletFakeRepository(fakeWallet);
-
-            var fakeProduct = Product.builder()
-                    .id(PRODUCT_ID)
-                    .quantity(500)
-                    .price(100)
-                    .build();
-            when(pr.findByProductId(anyLong())).thenReturn(Optional.of(fakeProduct));
-
-            var expectedOrder = Order.builder()
-                    .id(1L)
-                    .build();
-            when(or.save(any())).thenReturn(expectedOrder);
-
-            var svc = new OrderService(or, wr, pr);
-            final int orderQuantity = 250;
-            svc.orderProduct(USER_ID, PRODUCT_ID, orderQuantity);
-
-            Optional<Wallet> found = wr.findByUserId(USER_ID);
-            assert found.isPresent();
-            Wallet foundUnwrap = found.get();
-            assert foundUnwrap.getBalance() == fakeWallet.getBalance() - fakeProduct.getPrice() * orderQuantity;
-        }
-    }
-
-    @DisplayName("주문 실패시의 롤백 테스팅")
-    @Nested
-    class OrderRollbackTest {
-
-        @DisplayName("잔액이 없는 경우 주문을 실패처리하고, 롤백처리 함.")
-        @Test
-        public void ShouldRollbackIfBalanceIsInsufficient() {
-
-            var or = mock(OrderRepository.class);
-            var expectedOrder = Order.builder()
-                    .id(1L)
-                    .build();
-            when(or.save(any())).thenReturn(expectedOrder);
-
-            var expectedWallet = Wallet.builder()
-                    .balance(10)
-                    .build();
-            var wr = mock(WalletRepository.class);
-            when(wr.findByUserId(anyLong())).thenReturn(Optional.of(expectedWallet));
-
-            var fakeProduct = Product.builder()
-                    .id(PRODUCT_ID)
-                    .quantity(10_000)
-                    .price(10_000)
+                    .quantity(100)
+                    .price(pricePerProduct)
                     .build();
             var pr = mock(ProductRepository.class);
             when(pr.findByProductId(anyLong())).thenReturn(Optional.of(fakeProduct));
 
-            var svc = new OrderService(or, wr, pr);
-            final int orderQuantity = 250;
-            svc.orderProduct(USER_ID, PRODUCT_ID, orderQuantity);
+            var fakeWallet = Wallet.builder()
+                    .userId(USER_ID)
+                    .balance(100)
+                    .build();
+            var wr = new WalletFakeRepository(fakeWallet);
 
+            var svc = new OrderService(or, wr, pr);
+            final int orderQuantity = 10;
+            final int totalPrice = pricePerProduct * orderQuantity;
+            var ex = assertThrows(
+                    InsufficientWalletBalanceException.class,
+                    () -> svc.orderProduct(USER_ID, PRODUCT_ID, orderQuantity));
+
+            assert ex.getMessage().equals(
+                    InsufficientWalletBalanceException.MakeMessage(totalPrice));
         }
     }
 }
