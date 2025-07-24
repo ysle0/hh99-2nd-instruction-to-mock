@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.order.app;
 
+import kr.hhplus.be.server.order.domain.Order;
 import kr.hhplus.be.server.order.domain.OrderRepository;
+import kr.hhplus.be.server.order.domain.misc.OrderStatus;
 import kr.hhplus.be.server.order.presentation.dto.OrderProductResponse;
 import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.product.domain.ProductRepository;
@@ -20,6 +22,8 @@ public class OrderService {
     private final OrderRepository orderRepo;
     private final WalletRepository walletRepo;
     private final ProductRepository productRepo;
+
+    private long orderIdGen;
 
     public OrderService(
             OrderRepository orderRepo,
@@ -55,16 +59,27 @@ public class OrderService {
             throw new InsufficientProductStockException(productID, quantity);
         }
 
-        Wallet foundWalletUnwrap = foundWallet.get();
+        foundProductUnwrap.setQuantity(quantityDiff);
+
+        Product newProduct = productRepo.save(foundProductUnwrap);
+
         final int totalPrice = foundProductUnwrap.getPrice() * quantity;
+        Wallet foundWalletUnwrap = foundWallet.get();
         final int balanceDiff = foundWalletUnwrap.getBalance() - totalPrice;
         if (balanceDiff < 0) {
             throw new InsufficientWalletBalanceException(totalPrice);
         }
 
-        foundWalletUnwrap.setBalance(quantityDiff);
-        Wallet saved = walletRepo.save(foundWalletUnwrap);
+        foundWalletUnwrap.setBalance(balanceDiff);
+        walletRepo.save(foundWalletUnwrap);
 
-        return null;
+        var newOrder = Order.builder()
+                .id(orderIdGen++)
+                .status(OrderStatus.PENDING)
+                .build();
+
+        Order savedOrder = orderRepo.save(newOrder);
+
+        return new OrderProductResponse(true, savedOrder);
     }
 }

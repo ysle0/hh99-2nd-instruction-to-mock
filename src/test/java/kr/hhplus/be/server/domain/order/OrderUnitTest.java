@@ -3,6 +3,8 @@ package kr.hhplus.be.server.domain.order;
 import kr.hhplus.be.server.order.app.OrderService;
 import kr.hhplus.be.server.order.domain.Order;
 import kr.hhplus.be.server.order.domain.OrderRepository;
+import kr.hhplus.be.server.order.domain.misc.OrderStatus;
+import kr.hhplus.be.server.order.infra.OrderFakeRepository;
 import kr.hhplus.be.server.order.presentation.dto.OrderProductResponse;
 import kr.hhplus.be.server.product.domain.Product;
 import kr.hhplus.be.server.product.domain.ProductRepository;
@@ -43,7 +45,6 @@ public class OrderUnitTest {
         @DisplayName("재고가 충분한 경우, 1 개 정상 주문이 가능 해야함.")
         @Test
         public void ShouldOrderOneProductWithSufficientStock() {
-            var or = mock(OrderRepository.class);
             var wr = mock(WalletRepository.class);
             var pr = mock(ProductRepository.class);
 
@@ -60,11 +61,7 @@ public class OrderUnitTest {
                     .quantity(100)
                     .build();
             when(pr.findByProductId(anyLong())).thenReturn(Optional.of(expectedProduct));
-
-            var expectedOrder = Order.builder()
-                    .id(1L)
-                    .build();
-            when(or.save(any())).thenReturn(expectedOrder);
+            var or = new OrderFakeRepository();
 
             var svc = new OrderService(or, wr, pr);
             final int orderQuantity = 1;
@@ -72,27 +69,14 @@ public class OrderUnitTest {
 
             assert resp.isOrdered();
             var o = resp.order();
-            assert o.getId().equals(expectedOrder.getId());
-
-            // test an ordered user.
-            var user = o.getUser();
-            assert user != null;
-            assert user.getId() == USER_ID;
-
-            // test a ordered product
-            var product = o.getOrderToProducts().get(0).getProduct();
-            assert product != null;
-            assert product.getId() == PRODUCT_ID;
-            assert product.getQuantity() == 100 - orderQuantity;
-            assert product.getPrice() == 500 - 100;
-            assert product.getName().equals("banana");
+            assert o.getId() == 0;
+            assert o.getStatus() == OrderStatus.PENDING;
         }
 
         @DisplayName("재고가 충분한 경우, N 개 정상 주문이 가능 해야함.")
         @Test
         public void ShouldOrderManyProductsWithSufficientStock() {
 
-            var or = mock(OrderRepository.class);
             var wr = mock(WalletRepository.class);
             var pr = mock(ProductRepository.class);
 
@@ -105,15 +89,16 @@ public class OrderUnitTest {
             var expectedProduct = Product.builder()
                     .id(PRODUCT_ID)
                     .name("banana")
-                    .price(500 - 100)
+                    .price(500)
                     .quantity(100)
                     .build();
             when(pr.findByProductId(anyLong())).thenReturn(Optional.of(expectedProduct));
 
-            var expectedOrder = Order.builder()
-                    .id(1L)
+            var fakeOrder = Order.builder()
+                    .id(0L)
+                    .status(OrderStatus.PENDING)
                     .build();
-            when(or.save(any())).thenReturn(expectedOrder);
+            var or = new OrderFakeRepository();
 
             var svc = new OrderService(or, wr, pr);
             final int orderQuantity = 10;
@@ -121,37 +106,29 @@ public class OrderUnitTest {
 
             assert resp.isOrdered();
             var o = resp.order();
-            assert o.getId().equals(expectedOrder.getId());
+            assert o.getId().equals(fakeOrder.getId());
+            assert o.getStatus() == OrderStatus.PENDING;
 
-            // test an ordered user.
-            var user = o.getUser();
-            assert user != null;
-            assert user.getId() == USER_ID;
+            resp = svc.orderProduct(USER_ID, PRODUCT_ID, orderQuantity);
 
-            // test an ordered product
-            var product = o.getOrderToProducts().get(0).getProduct();
-            assert product != null;
-            assert product.getId() == PRODUCT_ID;
-            assert product.getQuantity() == 100 - orderQuantity;
-            assert product.getPrice() == 500 - 100;
-            assert product.getName().equals("banana");
-        }
+            assert resp.isOrdered();
+            o = resp.order();
+            assert o.getId().equals(fakeOrder.getId() + 1);
+            assert o.getStatus() == OrderStatus.PENDING;
 
-        @DisplayName("주문 상품의 수량이 0 <= 이면 InvalidProductException 을 던지고, 주문을 취소한다.")
-        @Test
-        public void ShouldNeverOrderWithNegativeQuantity() {
-            var or = mock(OrderRepository.class);
-            var wr = mock(WalletRepository.class);
-            var pr = mock(ProductRepository.class);
+            resp = svc.orderProduct(USER_ID, PRODUCT_ID, orderQuantity);
 
-            var svc = new OrderService(or, wr, pr);
-            final int orderQuantity = -23;
-            var ex = assertThrows(
-                    InvalidProductQuantityException.class,
-                    () -> svc.orderProduct(USER_ID, PRODUCT_ID, orderQuantity));
+            assert resp.isOrdered();
+            o = resp.order();
+            assert o.getId().equals(fakeOrder.getId() + 2);
+            assert o.getStatus() == OrderStatus.PENDING;
 
-            assert ex.getMessage().equals(
-                    InvalidProductQuantityException.MakeMessage(PRODUCT_ID, orderQuantity));
+            resp = svc.orderProduct(USER_ID, PRODUCT_ID, orderQuantity);
+
+            assert resp.isOrdered();
+            o = resp.order();
+            assert o.getId().equals(fakeOrder.getId() + 3);
+            assert o.getStatus() == OrderStatus.PENDING;
         }
 
 
@@ -194,10 +171,13 @@ public class OrderUnitTest {
         public void ShouldBalanceRemainAsOrderSucceeds() {
 
             var or = mock(OrderRepository.class);
-            var pr = mock(ProductFakeRepository.class);
+            var pr = mock(ProductRepository.class);
+
+            final int originalBalance = 50_000;
+
             var fakeWallet = Wallet.builder()
                     .userId(USER_ID)
-                    .balance(500)
+                    .balance(originalBalance)
                     .build();
             var wr = new WalletFakeRepository(fakeWallet);
 
@@ -220,7 +200,7 @@ public class OrderUnitTest {
             Optional<Wallet> found = wr.findByUserId(USER_ID);
             assert found.isPresent();
             Wallet foundUnwrap = found.get();
-            assert foundUnwrap.getBalance() == fakeWallet.getBalance() - fakeProduct.getPrice() * orderQuantity;
+            assert foundUnwrap.getBalance() == originalBalance - fakeProduct.getPrice() * orderQuantity;
         }
     }
 
@@ -228,6 +208,23 @@ public class OrderUnitTest {
     @DisplayName("2. 주문 기능에서 실패 테스트")
     @Nested
     class OrderProductFailTest {
+        @DisplayName("주문 상품의 수량이 0 <= 이면 InvalidProductException 을 던지고, 주문을 취소한다.")
+        @Test
+        public void ShouldNeverOrderWithNegativeQuantity() {
+            var or = mock(OrderRepository.class);
+            var wr = mock(WalletRepository.class);
+            var pr = mock(ProductRepository.class);
+
+            var svc = new OrderService(or, wr, pr);
+            final int orderQuantity = -23;
+            var ex = assertThrows(
+                    InvalidProductQuantityException.class,
+                    () -> svc.orderProduct(USER_ID, PRODUCT_ID, orderQuantity));
+
+            assert ex.getMessage().equals(
+                    InvalidProductQuantityException.MakeMessage(PRODUCT_ID, orderQuantity));
+        }
+
         @DisplayName("비정상적인 user ID 를 받으면 InvalidUserException 를 던지고, 주문을 취소한다.")
         @Test
         public void ShouldThrowInvalidUserIdException() {

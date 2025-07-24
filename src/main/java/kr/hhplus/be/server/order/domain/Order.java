@@ -5,10 +5,7 @@ import kr.hhplus.be.server.discountCoupon.domain.DiscountCoupon;
 import kr.hhplus.be.server.discountCoupon.domain.misc.DiscountCouponType;
 import kr.hhplus.be.server.order.domain.misc.OrderStatus;
 import kr.hhplus.be.server.user.domain.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -18,6 +15,8 @@ import java.util.List;
 @Table(name = "orders")
 @ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class Order {
