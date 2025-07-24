@@ -1,10 +1,11 @@
 package kr.hhplus.be.server.order.presentation.dto;
 
+import kr.hhplus.be.server.order.domain.Order;
 import kr.hhplus.be.server.order.domain.misc.OrderMessages;
 import kr.hhplus.be.server.shared.Messages;
 import kr.hhplus.be.server.shared.api.ApiResponse;
 
-public record OrderProductResponse(boolean isOrdered) {
+public record OrderProductResponse(boolean isOrdered, Order order) {
     public ApiResponse<OrderProductResponse> Ok() {
         return new ApiResponse<>(
                 OrderMessages.ORDER_SUCCESS,
@@ -16,7 +17,7 @@ public record OrderProductResponse(boolean isOrdered) {
         return new ApiResponse<>(
                 OrderMessages.ORDER_INVALID_QUANTITY,
                 Messages.NO,
-                new OrderProductResponse(false));
+                new OrderProductResponse(false, null));
     }
 
 }

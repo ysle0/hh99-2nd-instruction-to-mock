@@ -10,12 +10,9 @@ import java.util.Optional;
 public class WalletFakeRepository implements WalletRepository {
     private final Map<Long, Wallet> store;
 
-    public WalletFakeRepository(long fakeUserId) {
+    public WalletFakeRepository(Wallet fakeWallet) {
         this.store = new HashMap<>(1);
-        var fakeWallet = Wallet.builder()
-                .userId(fakeUserId)
-                .build();
-        store.put(fakeUserId, fakeWallet);
+        store.put(fakeWallet.getUserId(), fakeWallet);
     }
 
     @Override

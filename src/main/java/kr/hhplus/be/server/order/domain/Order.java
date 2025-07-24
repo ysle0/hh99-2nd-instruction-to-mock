@@ -5,6 +5,7 @@ import kr.hhplus.be.server.discountCoupon.domain.DiscountCoupon;
 import kr.hhplus.be.server.discountCoupon.domain.misc.DiscountCouponType;
 import kr.hhplus.be.server.order.domain.misc.OrderStatus;
 import kr.hhplus.be.server.user.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,6 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 @ToString
+@Builder
 @Getter
 @Setter
 public class Order {
