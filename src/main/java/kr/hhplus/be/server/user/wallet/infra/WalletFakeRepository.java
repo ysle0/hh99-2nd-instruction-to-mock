@@ -1,0 +1,31 @@
+package kr.hhplus.be.server.user.wallet.infra;
+
+import kr.hhplus.be.server.user.wallet.domain.Wallet;
+import kr.hhplus.be.server.user.wallet.domain.WalletRepository;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+public class WalletFakeRepository implements WalletRepository {
+    private final Map<Long, Wallet> store;
+
+    public WalletFakeRepository(Wallet fakeWallet) {
+        this.store = new HashMap<>(1);
+        store.put(fakeWallet.getUserId(), fakeWallet);
+    }
+
+    @Override
+    public Optional<Wallet> findByUserId(long userId) {
+        if (!store.containsKey(userId)) {
+            return Optional.empty();
+        }
+        Wallet stored = store.get(userId);
+        return Optional.of(stored);
+    }
+
+    @Override
+    public Wallet save(Wallet walletWithNewBalance) {
+        return store.put(walletWithNewBalance.getUserId(), walletWithNewBalance);
+    }
+}
